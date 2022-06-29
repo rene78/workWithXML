@@ -341,6 +341,27 @@
 <action type="create">
   <node id="9844010235" lat="47.6530000" lon="9.4744499" version="1" timestamp="2022-06-24T12:16:12Z" changeset="122800892" uid="257555" user="rene78"/>
 </action>
+<action type="create">
+  <way id="1072310203" version="1" timestamp="2022-06-22T13:47:54Z" changeset="122713614" uid="257555" user="rene78">
+    <bounds minlat="47.6700922" minlon="9.4930957" maxlat="47.6701029" maxlon="9.4942065"/>
+    <nd ref="9838834424" lat="47.6700922" lon="9.4942065"/>
+    <nd ref="7963768089" lat="47.6701004" lon="9.4932077"/>
+    <nd ref="9838834425" lat="47.6701029" lon="9.4930957"/>
+    <tag k="access" v="destination"/>
+    <tag k="highway" v="service"/>
+    <tag k="service" v="driveway"/>
+  </way>
+<action type="delete">
+<old>
+  <node id="1501" lat="10.0000000" lon="5.0100000" version="1" timestamp="2013-07-01T09:01:11Z" changeset="496" uid="42" user="foo">
+    <tag k="foo" v="bar_1501"/>
+    <tag k="foo_1501" v="bar"/>
+  </node>
+</old>
+<new>
+  <node id="1501" visible="false" version="2" timestamp="2013-07-01T09:02:11Z" changeset="496" uid="42" user="foo"/>
+</new>
+</action>
 <action type="modify">
 <old>
   <way id="437103103" version="5" timestamp="2021-12-28T11:56:32Z" changeset="115467128" uid="15748" user="bigbug21">
