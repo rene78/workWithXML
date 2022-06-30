@@ -1,5 +1,3 @@
-// TO-DO: More boilerplate for the creation of the table
-
 //XML
 fetch("interpreter.xml")
   .then(res => res.text())
@@ -20,8 +18,12 @@ fetch("interpreter.xml")
     if (!action) action = "create";//The xml data structure is different for "create" nodes, thus action will be "null" in the line above
     console.log(action);
 
+    //Create header with element info
+    let elementInfoHtml = `<span class="${action} capitalize">${action}</span> ${node[0].nodeName} <a href="https://www.openstreetmap.org/${node[0].nodeName}/${node[0].getAttribute("id")}" target="_blank" rel="noopener noreferrer">${node[0].getAttribute("id")}</a>`;
+    document.querySelector("#element-info").innerHTML = elementInfoHtml;
+
     //Variables
-    let tableHtml;
+    let tableHtml = `<table class="table-container">`;
 
     //Object with all key-value pairs for new and old and relevant meta tags for table
     const keyvalues = { old: { meta: {}, tags: {} }, new: { meta: {}, tags: {} } };
@@ -32,8 +34,7 @@ fetch("interpreter.xml")
       const keysNew = node[0].querySelectorAll("tag");
 
       //Create table
-      tableHtml = `
-      <table class="table-container">
+      tableHtml += `
         <thead>
           <tr>
             <th>Tag</th>
@@ -63,11 +64,6 @@ fetch("interpreter.xml")
           </tr>
         `
       }
-
-      tableHtml += `
-          </tbody>
-        </table>
-      `;
     }
 
     //2 MODIFY/DELETE
@@ -135,7 +131,7 @@ fetch("interpreter.xml")
         //Case 4: Tags similar --> Don't display this key-value pair
         let oldTag = keyvalues.old.tags[uniqueKeysArr[i]];
         let newTag = keyvalues.new.tags[uniqueKeysArr[i]];
-        let cssClass = "";
+        let cssClass;
         //Case 1
         if (!newTag) {
           cssClass = "red";
@@ -151,9 +147,11 @@ fetch("interpreter.xml")
 
         //Case 4
         // else continue;
+        // Option: Add "unchanged-counter" and display message at the bottom of table:
+        //"...and xx unchanged tags"
 
         tableHtml += `
-      <tr class=${cssClass}>
+      <tr ${(cssClass ? 'class=' + cssClass : '')}>
         <td>${uniqueKeysArr[i]}</td>
         <td>${oldTag}</td>
         <td>${newTag}</td>
@@ -161,12 +159,16 @@ fetch("interpreter.xml")
       `
       }
 
-      tableHtml += `
-        </tbody>
-      </table>
-    `;
     }
 
+    tableHtml += `
+      </tbody>
+    </table>
+  `;
     document.querySelector("#tags-comparison").innerHTML = tableHtml;
+
+    //Create link to edit geometry in iD editor
+    let editGeometry = `<a href="https://www.openstreetmap.org/edit?${node[0].nodeName}=${node[0].getAttribute("id")}" target="_blank" rel="noopener noreferrer">Edit</a> in iD`;
+    document.querySelector("#edit-geometry").innerHTML = editGeometry;
   }
   )
