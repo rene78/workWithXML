@@ -125,27 +125,23 @@ fetch("interpreter.xml")
 
       //Traverse uniqueKeysArray and check in object which value this key has in new and old
       for (let i = 0; i < uniqueKeysArr.length; i++) {
-        //Case 1: Tag deleted in new --> Background color red, change from "undefined" to ""
-        //Case 2: Tag created in new --> Background color green, change from "undefined" to ""
-        //Case 3: Tag different in new --> Background color yellow
-        //Case 4: Tags similar --> Don't display this key-value pair
         let oldTag = keyvalues.old.tags[uniqueKeysArr[i]];
         let newTag = keyvalues.new.tags[uniqueKeysArr[i]];
         let cssClass;
-        //Case 1
+        //Case 1: Tag deleted in new --> Background color red, change from "undefined" to ""
         if (!newTag) {
           cssClass = "red";
           newTag = "";
         }
-        //Case 2
+        //Case 2: Tag created in new --> Background color green, change from "undefined" to ""
         else if (!oldTag) {
           cssClass = "green";
           oldTag = "";
         }
-        //Case 3
+        //Case 3: Tag different in new --> Background color yellow
         else if (oldTag !== newTag) cssClass = "yellow";
 
-        //Case 4
+        //Case 4: Tags similar --> Don't display this key-value pair
         // else continue;
         // Option: Add "unchanged-counter" and display message at the bottom of table:
         //"...and xx unchanged tags"
@@ -158,7 +154,6 @@ fetch("interpreter.xml")
       </tr>
       `
       }
-
     }
 
     tableHtml += `
