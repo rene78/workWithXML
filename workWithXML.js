@@ -13,10 +13,78 @@ fetch("interpreter.xml")
     // console.log(node[0].parentNode.parentNode.getAttribute('type'));
     // console.log(node[0].querySelectorAll("tag")[0].getAttribute('k'));
 
+    //1. Traverse all "action" nodes of xml file
+    //2. If "Create":
+    //deltaInNodesWays++
+    //deltaInTags += nTags
+    //3. If "Modify":
+    //deltaInNodesWays = unchanged
+    //deltaInTags += nTagsNew - nTagsOld
+    //4. If "Delete":
+    //deltaInNodesWays--
+    //deltaInTags -= nTags
+
+    //Vandalism Checker
+    const changesets = {};
+    let actions = data.querySelectorAll("action");
+    // console.log(actions);
+    for (let i = 0; i < actions.length; i++) {
+      //Get type, i.e. "create", "modify" or "delete"
+      const type = actions[i].getAttribute("type");
+      // console.log(type);
+
+      //Get changeset number
+      let changesetNumber
+      if (type === "create") changesetNumber = actions[i].lastElementChild.getAttribute("changeset");
+      else changesetNumber = actions[i].lastElementChild.firstElementChild.getAttribute("changeset");
+      // console.log(changesetNumber);
+
+      //Create empty changeset object, if new.
+      if (!changesets[changesetNumber]) changesets[changesetNumber] = { deltaInNodesWays: 0, deltaInTags: 0};
+
+      //Check which action is performed
+      //"Create"
+      //deltaInNodesWays++
+      //deltaInTags += nTagsAdded
+      if (type === "create") {
+        // const changesetNumber = actions[11].lastElementChild.getAttribute("changeset");
+        const nTagsAdded = actions[i].lastElementChild.querySelectorAll("tag").length;
+        // console.log(nTagsAdded);
+          changesets[changesetNumber].deltaInNodesWays++;
+          changesets[changesetNumber].deltaInTags += nTagsAdded;
+      }
+
+      // "Modify"
+      //deltaInNodesWays = unchanged
+      //deltaInTags += nTagsNew - nTagsOld
+      if (type === "modify") {
+        const nTagsNew = actions[i].lastElementChild.firstElementChild.querySelectorAll("tag").length;
+        const nTagsOld = actions[i].firstElementChild.firstElementChild.querySelectorAll("tag").length;
+        // console.log(nTagsNew);
+        // console.log(nTagsOld);
+        changesets[changesetNumber].deltaInTags += (nTagsNew - nTagsOld);
+      }
+
+      // "Delete"
+      //deltaInNodesWays--
+      //deltaInTags -= nTags
+      if (type === "delete") {
+        const nTagsDeleted = actions[i].firstElementChild.querySelectorAll("tag").length;
+        // console.log(nTagsDeleted);
+        changesets[changesetNumber].deltaInNodesWays--;
+        changesets[changesetNumber].deltaInTags -= nTagsDeleted;
+      }
+    }
+
+    console.log(changesets);
+
+    //----------------------------------------------------------------------------------------------------------------
+
+    //Tag comparison table creation
     //First check what type of action has been performed on the element (i.e. create, modify, delete)
     let action = node[0].parentNode.parentNode.getAttribute('type');//Check if action is "modify", "delete" or "null"
     if (!action) action = "create";//The xml data structure is different for "create" nodes, thus action will be "null" in the line above
-    console.log(action);
+    // console.log(action);
 
     //Create header with element info
     let elementInfoHtml = `<span class="${action} capitalize">${action}</span> ${node[0].nodeName} <a href="https://www.openstreetmap.org/${node[0].nodeName}/${node[0].getAttribute("id")}" target="_blank" rel="noopener noreferrer">${node[0].getAttribute("id")}</a>`;
