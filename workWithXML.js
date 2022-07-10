@@ -25,7 +25,7 @@ fetch("interpreter.xml")
     //deltaInTags -= nTags
 
     //Vandalism Checker
-    const changesets = {};
+    const vandalismCheckResult = {};
     let actions = data.querySelectorAll("action");
     // console.log(actions);
     for (let i = 0; i < actions.length; i++) {
@@ -40,7 +40,7 @@ fetch("interpreter.xml")
       // console.log(changesetNumber);
 
       //Create empty changeset object, if new.
-      if (!changesets[changesetNumber]) changesets[changesetNumber] = { deltaInNodesWays: 0, deltaInTags: 0};
+      if (!vandalismCheckResult[changesetNumber]) vandalismCheckResult[changesetNumber] = { deltaInNodesWays: 0, deltaInTags: 0};
 
       //Check which action is performed
       //"Create"
@@ -50,8 +50,8 @@ fetch("interpreter.xml")
         // const changesetNumber = actions[11].lastElementChild.getAttribute("changeset");
         const nTagsAdded = actions[i].lastElementChild.querySelectorAll("tag").length;
         // console.log(nTagsAdded);
-          changesets[changesetNumber].deltaInNodesWays++;
-          changesets[changesetNumber].deltaInTags += nTagsAdded;
+          vandalismCheckResult[changesetNumber].deltaInNodesWays++;
+          vandalismCheckResult[changesetNumber].deltaInTags += nTagsAdded;
       }
 
       // "Modify"
@@ -62,7 +62,7 @@ fetch("interpreter.xml")
         const nTagsOld = actions[i].firstElementChild.firstElementChild.querySelectorAll("tag").length;
         // console.log(nTagsNew);
         // console.log(nTagsOld);
-        changesets[changesetNumber].deltaInTags += (nTagsNew - nTagsOld);
+        vandalismCheckResult[changesetNumber].deltaInTags += (nTagsNew - nTagsOld);
       }
 
       // "Delete"
@@ -71,12 +71,12 @@ fetch("interpreter.xml")
       if (type === "delete") {
         const nTagsDeleted = actions[i].firstElementChild.querySelectorAll("tag").length;
         // console.log(nTagsDeleted);
-        changesets[changesetNumber].deltaInNodesWays--;
-        changesets[changesetNumber].deltaInTags -= nTagsDeleted;
+        vandalismCheckResult[changesetNumber].deltaInNodesWays--;
+        vandalismCheckResult[changesetNumber].deltaInTags -= nTagsDeleted;
       }
     }
 
-    console.log(changesets);
+    console.log(vandalismCheckResult);
 
     //----------------------------------------------------------------------------------------------------------------
 
